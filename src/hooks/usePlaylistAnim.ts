@@ -2,7 +2,6 @@ import {
   Extrapolate,
   interpolate,
   useAnimatedStyle,
-  useDerivedValue,
   useSharedValue,
 } from 'react-native-reanimated';
 import {Dimensions} from 'react-native';
@@ -15,19 +14,13 @@ const widthRatio = width / 500;
 const heightRatio = height / 500;
 
 const usePlaylistAnim = (offsetY: any) => {
-  const x = useSharedValue(0);
-
-  useDerivedValue(() => {
-    const formatedValue = Math.abs(offsetY);
-    x.value = formatedValue;
-  });
-
+  const scaleY = useSharedValue(offsetY);
   const animations = useAnimatedStyle(() => {
-    const opacityAnim = interpolate(x.value, [0, 220], [1, 0.3], {
+    const opacityAnim = interpolate(scaleY.value, [0, 220], [1, 0.3], {
       extrapolateRight: Extrapolate.CLAMP,
     });
 
-    const heightAnim = interpolate(x.value, [0, 300], [60, 14], {
+    const heightAnim = interpolate(scaleY.value, [0, 300], [60, 14], {
       extrapolateRight: Extrapolate.CLAMP,
     });
 
