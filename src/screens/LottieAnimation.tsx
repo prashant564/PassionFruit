@@ -19,8 +19,6 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated';
-import {BlurView} from '@react-native-community/blur';
-
 export type onScrollNativeEventHandler = (
   e: NativeSyntheticEvent<NativeScrollEvent>,
 ) => void;
@@ -29,7 +27,7 @@ const LottieAnimation = () => {
   const {width, height} = useWindowDimensions();
   const scrollY = useSharedValue(0);
   const header = height / 2.8;
-  const navBar = StatusBar.currentHeight || 100;
+  const navBar = StatusBar.currentHeight!! * 3 || 100;
 
   const styles = StyleSheet.create({
     container: {
@@ -43,14 +41,21 @@ const LottieAnimation = () => {
     },
     header: {
       zIndex: 101,
-      borderRadius: 20,
-      backgroundColor: 'rgba(0,0,0,0.25)',
+      borderBottomLeftRadius: 20,
+      borderBottomRightRadius: 20,
+
       ...(StyleSheet.absoluteFill as any),
-      paddingTop: navBar,
+    },
+    image: {
+      flex: 1,
+      overflow: 'hidden',
+      borderBottomLeftRadius: 20,
+      borderBottomRightRadius: 20,
     },
     topHeaderContainer: {
       width,
-      position: 'absolute',
+      flexDirection: 'row',
+      alignItems: 'center',
     },
     content: {
       marginBottom: 20,
@@ -75,25 +80,24 @@ const LottieAnimation = () => {
       color: 'green',
     },
     leftBlurContainer: {
-      left: 16,
+      marginLeft: 16,
+      marginTop: navBar / 2,
       padding: 8,
       paddingHorizontal: 12,
       borderRadius: 18,
-      position: 'absolute',
       overflow: 'hidden',
       flexDirection: 'row',
       alignItems: 'center',
-      top: navBar / 2,
-      backgroundColor: 'rgba(0,0,0,.25)',
+      justifyContent: 'flex-start',
+      backgroundColor: 'rgba(0,0,0,.50)',
     },
     rightBlurContainer: {
-      position: 'absolute',
       padding: 8,
-      borderRadius: 16,
+      borderRadius: 20,
+      marginTop: navBar / 2,
       overflow: 'hidden',
-      right: 15,
-      top: navBar / 2,
-      backgroundColor: 'rgba(0,0,0,.25)',
+      marginRight: 16,
+      backgroundColor: 'rgba(0,0,0,.50)',
     },
     tabs: {
       position: 'absolute',
@@ -126,6 +130,8 @@ const LottieAnimation = () => {
       fontWeight: '600',
       fontSize: 18,
       paddingRight: 10,
+      textAlign: 'center',
+      textAlignVertical: 'center',
     },
   });
 
@@ -197,47 +203,36 @@ const LottieAnimation = () => {
       <Animated.View style={[headerBg, headerAnimation]}>
         <Image
           source={{
-            uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTika-QN2h6uMlZprq2SGbMW5YFSX39j9sS0Z6NcN7vsA&usqp=CAU&ec=48665698',
+            uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3MCBV095prILjUacaS81d6qQ-zK1MwcEwkUcvDmUhfw&usqp=CAU&ec=48665698',
           }}
-          style={{flex: 1}}
+          style={styles.image}
         />
       </Animated.View>
       <Animated.View style={[styles.header, innerHeaderAnimations]}>
         <Animated.View style={[styles.topHeaderContainer, topHeaderContainer]}>
-          <BlurView
-            style={styles.leftBlurContainer}
-            blurType="light"
-            blurAmount={5}
-            reducedTransparencyFallbackColor="white">
+          <View style={styles.leftBlurContainer}>
             <Text style={styles.buttonText}>Upgrade</Text>
             <Image
               source={require('../assets/settings.png')}
               resizeMode="contain"
-              style={{width: 18, height: 18}}
+              style={{width: 24, height: 24}}
             />
-          </BlurView>
-          <BlurView
-            style={styles.rightBlurContainer}
-            blurType="light"
-            blurAmount={5}
-            reducedTransparencyFallbackColor="white">
+          </View>
+          <View style={{flex: 1}} />
+          <View style={styles.rightBlurContainer}>
             <Image
               source={require('../assets/settings.png')}
               resizeMode="contain"
-              style={{width: 18, height: 18}}
+              style={{width: 24, height: 24}}
             />
-          </BlurView>
+          </View>
         </Animated.View>
 
-        <BlurView
-          style={styles.tabs}
-          blurType="light"
-          blurAmount={5}
-          reducedTransparencyFallbackColor="white">
+        <View style={styles.tabs}>
           <Text style={[styles.tabText, styles.tabTextActive]}>Upgrade</Text>
           <Text style={styles.tabText}>Upgrade</Text>
           <Text style={styles.tabText}>Upgrade</Text>
-        </BlurView>
+        </View>
       </Animated.View>
       <Animated.ScrollView
         bounces={false}

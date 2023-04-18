@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
     top: TOP,
     alignItems: 'center',
     height: SHUFFLE_BUTTON_HEIGHT,
-    zIndex: 1,
+    zIndex: 100,
   },
   button: {
     width: 230,
