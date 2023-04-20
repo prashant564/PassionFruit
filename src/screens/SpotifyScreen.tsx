@@ -9,10 +9,7 @@ import React, {useEffect, useState} from 'react';
 import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
 
 import Animated, {
-  Extrapolate,
-  interpolate,
   useAnimatedScrollHandler,
-  useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated';
 import LinearGradient from 'react-native-linear-gradient';
@@ -20,7 +17,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import ImageColors from 'react-native-image-colors';
 import ShuffleButton, {HEADER_HEIGHT} from '../components/ShuffleButton';
 import UIHelper from '../components/UIHelper';
-import {ratio} from '../hooks/usePlaylistAnim';
+import usePlaylistAnim, {ratio} from '../hooks/usePlaylistAnim';
 import PlaylistTitle from '../components/PlaylistTitle';
 import DetailsCover from '../components/DetailsCover';
 
@@ -29,7 +26,7 @@ const initialState = {
   isLoading: true,
 };
 
-const OFFSET_TOP =
+export const OFFSET_TOP =
   (UIHelper.isIphoneX() ? HEADER_HEIGHT * 2 : HEADER_HEIGHT) * ratio + 20;
 
 export const data = [
@@ -68,7 +65,8 @@ const SpotifyScreen = () => {
     },
   });
 
-  //   const {animations} = usePlaylistAnim(scrollY);
+  const {animations, detailCoverAnimation, translateAnim, shuffleBtnAnimation} =
+    usePlaylistAnim(scrollY);
 
   useEffect(() => {
     (async () => {
@@ -90,66 +88,6 @@ const SpotifyScreen = () => {
       }
     })();
   }, []);
-
-  const animations = useAnimatedStyle(() => {
-    const opacityAnim = interpolate(scrollY.value, [0, 220], [1, 0.3], {
-      extrapolateRight: Extrapolate.CLAMP,
-    });
-
-    const heightAnim = interpolate(scrollY.value, [0, 220], [60, 14], {
-      extrapolateRight: Extrapolate.CLAMP,
-    });
-
-    return {
-      opacity: opacityAnim,
-      height: `${heightAnim}%`,
-      //   transform: [{scale: scale}],
-    };
-  });
-
-  const translateAnim = useAnimatedStyle(() => {
-    const translateY = interpolate(
-      scrollY.value,
-      [0, 300],
-      [HEADER_HEIGHT, (HEADER_HEIGHT + 16) * ratio],
-      {
-        extrapolateRight: Extrapolate.CLAMP,
-      },
-    );
-
-    return {
-      transform: [{translateY: translateY}],
-    };
-  });
-
-  const detailCoverAnimation = useAnimatedStyle(() => {
-    const scaleAnim = interpolate(scrollY.value, [0, 250], [1, 0.9], {
-      extrapolateRight: Extrapolate.CLAMP,
-    });
-    const opacityAnim = interpolate(scrollY.value, [0, 300], [1, 0], {
-      extrapolateRight: Extrapolate.CLAMP,
-    });
-
-    return {
-      opacity: opacityAnim,
-      transform: [{scaleX: scaleAnim}, {scaleY: scaleAnim}],
-    };
-  });
-
-  const shuffleBtnAnimation = useAnimatedStyle(() => {
-    const translateY = interpolate(
-      scrollY.value,
-      [0, 300],
-      [0, -350 + OFFSET_TOP],
-      {
-        extrapolateRight: Extrapolate.CLAMP,
-      },
-    );
-
-    return {
-      transform: [{translateY: translateY}],
-    };
-  });
 
   return (
     <SafeAreaView style={{backgroundColor: '#121212', flex: 1, top}}>

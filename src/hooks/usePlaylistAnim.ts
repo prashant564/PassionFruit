@@ -1,71 +1,78 @@
-import {
+import Animated, {
   Extrapolate,
   interpolate,
   useAnimatedStyle,
-  useSharedValue,
 } from 'react-native-reanimated';
 import {Dimensions} from 'react-native';
+import {HEADER_HEIGHT} from '../components/ShuffleButton';
+import {OFFSET_TOP} from '../screens/SpotifyScreen';
 
 const {height, width} = Dimensions.get('window');
 
 export const ratio = (width / 414 / height) * 1000;
 
-const widthRatio = width / 500;
-const heightRatio = height / 500;
-
-const usePlaylistAnim = (offsetY: any) => {
-  const scaleY = useSharedValue(offsetY);
+const usePlaylistAnim = (offsetY: Animated.SharedValue<number>) => {
+  const scrollY = offsetY;
   const animations = useAnimatedStyle(() => {
-    const opacityAnim = interpolate(scaleY.value, [0, 220], [1, 0.3], {
+    const opacityAnim = interpolate(scrollY.value, [0, 220], [1, 0.3], {
       extrapolateRight: Extrapolate.CLAMP,
     });
 
-    const heightAnim = interpolate(scaleY.value, [0, 300], [60, 14], {
+    const heightAnim = interpolate(scrollY.value, [0, 220], [60, 14], {
       extrapolateRight: Extrapolate.CLAMP,
     });
 
     return {
       opacity: opacityAnim,
       height: `${heightAnim}%`,
-      //   transform: [{scale: scale}],
     };
   });
 
   const translateAnim = useAnimatedStyle(() => {
-    const translateY = interpolate(offsetY, [0, 300], [0, 54 * ratio], {
-      extrapolateRight: Extrapolate.CLAMP,
-    });
+    const translateY = interpolate(
+      scrollY.value,
+      [0, 300],
+      [HEADER_HEIGHT, (HEADER_HEIGHT + 16) * ratio],
+      {
+        extrapolateRight: Extrapolate.CLAMP,
+      },
+    );
 
     return {
       transform: [{translateY: translateY}],
     };
   });
 
-  //   const opacityAnim = useRef(
-  //     offsetY.interpolate({
-  //       inputRange: [0, 220],
-  //       outputRange: [1, 0.3],
-  //       extrapolate: Animated.Extrapolate.CLAMP,
-  //     }),
-  //   ).current;
+  const detailCoverAnimation = useAnimatedStyle(() => {
+    const scaleAnim = interpolate(scrollY.value, [0, 250], [1, 0.9], {
+      extrapolateRight: Extrapolate.CLAMP,
+    });
+    const opacityAnim = interpolate(scrollY.value, [0, 300], [1, 0], {
+      extrapolateRight: Extrapolate.CLAMP,
+    });
 
-  //   const heightAnim = useRef(
-  //     offsetY.interpolate({
-  //       inputRange: [0, 300],
-  //       outputRange: [60, 14],
-  //       extrapolate: Animated.Extrapolate.CLAMP,
-  //     }),
-  //   ).current;
+    return {
+      opacity: opacityAnim,
+      transform: [{scaleX: scaleAnim}, {scaleY: scaleAnim}],
+    };
+  });
 
-  //   const translateAnim = useRef(
-  //     offsetY.interpolate({
-  //       inputRange: [0, 300],
-  //       outputRange: [0, 54 * dimensions.ratio],
-  //       extrapolate: Animated.Extrapolate.CLAMP,
-  //     }),
-  //   ).current;
+  const shuffleBtnAnimation = useAnimatedStyle(() => {
+    const translateY = interpolate(
+      scrollY.value,
+      [0, 300],
+      [0, -350 + OFFSET_TOP],
+      {
+        extrapolateRight: Extrapolate.CLAMP,
+      },
+    );
 
-  return {animations, translateAnim};
+    return {
+      transform: [{translateY: translateY}],
+    };
+  });
+
+  return {animations, translateAnim, detailCoverAnimation, shuffleBtnAnimation};
 };
 
 export default usePlaylistAnim;

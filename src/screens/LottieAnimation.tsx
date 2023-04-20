@@ -12,13 +12,11 @@ import {
 } from 'react-native';
 import React from 'react';
 import Animated, {
-  Extrapolate,
-  interpolate,
   runOnJS,
   useAnimatedScrollHandler,
-  useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated';
+import useLottieAnim from '../hooks/useLottieAnim';
 export type onScrollNativeEventHandler = (
   e: NativeSyntheticEvent<NativeScrollEvent>,
 ) => void;
@@ -148,54 +146,12 @@ const LottieAnimation = () => {
     },
   );
 
-  const headerAnimation = useAnimatedStyle(() => {
-    const heightAnim = interpolate(
-      scrollY.value,
-      [-100, 0, header - navBar],
-      [header + 75, header - 25, navBar + 10],
-      {extrapolateRight: Extrapolate.CLAMP},
-    );
-
-    return {
-      height: heightAnim,
-    };
-  });
-
-  const innerHeaderAnimations = useAnimatedStyle(() => {
-    const heightAnim = interpolate(
-      scrollY.value,
-      [-100, 0, header - navBar],
-      [header + 75, header - 25, navBar + 10],
-      {
-        extrapolateRight: Extrapolate.CLAMP,
-      },
-    );
-
-    return {
-      height: heightAnim,
-    };
-  });
-
-  const topHeaderContainer = useAnimatedStyle(() => {
-    const opacityAnim = interpolate(
-      scrollY.value,
-      [-100, 0, header - navBar - 30],
-      [1, 1, 0],
-      {
-        extrapolateRight: Extrapolate.CLAMP,
-      },
-    );
-
-    return {
-      opacity: opacityAnim,
-    };
-  });
-
-  const scrollViewAnimation = useAnimatedStyle(() => {
-    const zIndex = scrollY.value > 100 ? 99 : 100;
-
-    return {zIndex};
-  });
+  const {
+    headerAnimation,
+    topHeaderContainer,
+    innerHeaderAnimations,
+    scrollViewAnimation,
+  } = useLottieAnim(scrollY, header, navBar);
 
   return (
     <View style={container}>
