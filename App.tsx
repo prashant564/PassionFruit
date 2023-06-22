@@ -6,6 +6,7 @@
  */
 
 import React from 'react';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {
   SafeAreaProvider,
   initialWindowMetrics,
@@ -33,7 +34,9 @@ function App(): JSX.Element {
 const ProvidedApp = () => {
   return (
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-      <App />
+      <GestureHandlerRootView style={{flex: 1}}>
+        <App />
+      </GestureHandlerRootView>
     </SafeAreaProvider>
   );
 };

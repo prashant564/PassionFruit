@@ -27,6 +27,13 @@ const HomeScreen = () => {
         }}>
         <Text style={styles.btnText}>Lottie List</Text>
       </Pressable>
+      <Pressable
+        style={({pressed}) => [{opacity: pressed ? 0.5 : 1}, styles.button]}
+        onPress={() => {
+          navigate('CardSwipeListScreen');
+        }}>
+        <Text style={styles.btnText}>Card Swipe List</Text>
+      </Pressable>
     </View>
   );
 };
