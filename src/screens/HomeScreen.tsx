@@ -34,6 +34,13 @@ const HomeScreen = () => {
         }}>
         <Text style={styles.btnText}>Card Swipe List</Text>
       </Pressable>
+      <Pressable
+        style={({pressed}) => [{opacity: pressed ? 0.5 : 1}, styles.button]}
+        onPress={() => {
+          navigate('FlipCardAnimationScreen');
+        }}>
+        <Text style={styles.btnText}>Flip Cards</Text>
+      </Pressable>
     </View>
   );
 };

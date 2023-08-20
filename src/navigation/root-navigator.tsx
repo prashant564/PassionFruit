@@ -5,6 +5,7 @@ import {
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React, {useState} from 'react';
 import CardSwipeListScreen from '../screens/CardSwipeListScreen';
+import FlipCardAnimationScreen from '../screens/FlipCardAnimationScreen';
 import HomeScreen from '../screens/HomeScreen';
 import LottieAnimation from '../screens/LottieAnimation';
 import SpotifyScreen from '../screens/SpotifyScreen';
@@ -15,6 +16,7 @@ export interface RootNavigatorProps {
   SpotifyScreen: undefined;
   LottieAnimationScreen: undefined;
   CardSwipeListScreen: undefined;
+  FlipCardAnimationScreen: undefined;
 }
 
 const Stack = createNativeStackNavigator<RootNavigatorProps>();
@@ -34,6 +36,10 @@ const RootStack = () => {
         <Stack.Screen
           name="CardSwipeListScreen"
           component={CardSwipeListScreen}
+        />
+        <Stack.Screen
+          name="FlipCardAnimationScreen"
+          component={FlipCardAnimationScreen}
         />
       </>
     </Stack.Navigator>
